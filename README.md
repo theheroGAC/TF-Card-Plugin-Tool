@@ -8,3 +8,4 @@ The new version incorporates a file manager, FTP connection, adds compatibility 
 - TheFlow
 - Yifan Lu
 - Kouchan for the English translation
+- Info Thief
