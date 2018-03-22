@@ -122,6 +122,11 @@ function texteditor_button_setting()
   if not TEXTEDITOR_READ_ONLY then
    --删除行
    table.remove(texteditorInfo.list, texteditorInfo.focus)  
+   if #texteditorInfo.list < 1 then
+    table.insert(texteditorInfo.list, "")
+   elseif texteditorInfo.focus > #texteditorInfo.list then
+    texteditorInfo.focus = #texteditorInfo.list
+   end
    textHadChange = true
   end
   

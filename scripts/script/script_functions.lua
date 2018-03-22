@@ -586,6 +586,11 @@ function refresh_psv_apps()
 
 end
 
+---------------重构数据库--------------------------
+function rebuilddb()
+ files.delete("ur0:shell/db/app.db")
+end
+
 
 
 

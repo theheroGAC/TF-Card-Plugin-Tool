@@ -16,6 +16,7 @@ dofile("scripts/musicplayer/musicplayer_functions.lua")
 dofile("scripts/musicplayer/musicplayer_autoplaynextmusic_function.lua")
 
 ------------------全局变量------------------------------------------------------
+--buttons.analogtodpad(60) --摇杆死区
 if files.exists("resources/back.png") then
  back = image.load("resources/back.png") --读取背景图片
 elseif files.exists("resources/back.jpg") then
@@ -23,9 +24,8 @@ elseif files.exists("resources/back.jpg") then
 end
 if back then image.resize(back, 960, 544) end --重定义图片大小充满屏幕
 --mCdirPath = files.cdir() --记录软件本身的默认工作目录
-INSTALL_APP_SCAN = true
 
-VITA_SWVERSION = os.swversion() + 0
+VITA_SWVERSION = tonumber(os.swversion())
 
 --选项
 scriptInfo = {
@@ -46,6 +46,15 @@ scriptInfo = {
 scriptButtonTextList = {
  MAIN_BUTTON_SELECT,
  MAIN_BUTTON_POSITIVE,
+}
+
+installModeSelectMenuInfo = {
+ list = {
+ INSTALL_TF_USB_MODE_SELECT_OLD,
+ INSTALL_TF_USB_MODE_SELECT_NEW,
+ },
+ top = 1,
+ focus = 1,
 }
 
 -------------------continue----------------------------

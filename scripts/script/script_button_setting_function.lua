@@ -33,21 +33,21 @@ function script_button_setting()
  if buttons.circle then
 
   if scriptInfo.focus == 1 then
-   local installReady = show_sample_dialog(TIPS, string.format(INSTALL_TF_USB_READY, scriptInfo.list[scriptInfo.focus]), BUTTON_CANCEL, BUTTON_POSITIVE)
-   if installReady == 1 then
-    install_gamesd(4)
+   local state = show_sample_dialog(TIPS, string.format(INSTALL_TF_USB_READY, scriptInfo.list[scriptInfo.focus]), BUTTON_CANCEL, BUTTON_POSITIVE)
+   if state == 1 then 
+    install_gamesd(1)
    end
 
   elseif scriptInfo.focus == 2 then
-   local installReady = show_sample_dialog(TIPS, string.format(INSTALL_TF_USB_READY, scriptInfo.list[scriptInfo.focus]), BUTTON_CANCEL, BUTTON_POSITIVE)
-   if installReady == 1 then
-    install_gamesd(5)
+   local state = show_sample_dialog(TIPS, string.format(INSTALL_TF_USB_READY, scriptInfo.list[scriptInfo.focus]), BUTTON_CANCEL, BUTTON_POSITIVE)
+   if state == 1 then 
+    install_gamesd(2)
    end
    
   elseif scriptInfo.focus == 3 then
-   local installReady = show_sample_dialog(TIPS, string.format(INSTALL_TF_USB_READY, scriptInfo.list[scriptInfo.focus]), BUTTON_CANCEL, BUTTON_POSITIVE)
-   if installReady == 1 then
-    install_gamesd(6)
+   local state = show_sample_dialog(TIPS, string.format(INSTALL_TF_USB_READY, scriptInfo.list[scriptInfo.focus]), BUTTON_CANCEL, BUTTON_POSITIVE)
+   if state == 1 then 
+    install_gamesd(3)
    end
    
   elseif scriptInfo.focus == 4 then
