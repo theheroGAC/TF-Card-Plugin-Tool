@@ -2,8 +2,8 @@
 
 ------------------关于--------------------------*
 APP_NAME = "TF卡插件工具 [TF card plug-in tool]"
-APP_VERSION = "v2.0"
-APP_BUILD_DATE = "2018.03.20"
+APP_VERSION = "v2.1"
+APP_BUILD_DATE = "2018.03.26"
 APP_NAME_VERSION = APP_NAME.." "..APP_VERSION
 
 ------------------弹窗--------------------------*
@@ -143,18 +143,31 @@ EXPLORE_INSTALL_APP_NO_DST_DISK = "L'unità di destinazione non è stata trovata
 EXPLORE_EXPORT_MULTIMEDIA_READY = "Sei sicuro di voler esportare questo%i file multimediali?"
 EXPLORE_EXPORT_MULTIMEDIA_COMPLETE = "Totale file multimediali esportati"
 
+----------------音乐播放器----------------------------------------
+MUSIC_PLAYER_PLAYLIST = "プレイリスト"
+
+MUSIC_PLAYER_BUTTON_PLAY = "□ : PLAY"
+MUSIC_PLAYER_BUTTON_PARSE = "□ : Pausa"
+MUSIC_PLAYER_BUTTON_POSITIVE = "○ : Conferma"
+MUSIC_PLAYER_BUTTON_LR = "L/R : Indietro/Avanti"
+MUSIC_PLAYER_BUTTON_START = "START : Informazione"
+
+MUSIC_PLAYER_BUTTON_ORDER_PLAY = "△ : Normale"
+MUSIC_PLAYER_BUTTON_SINGLE_REPEAT = "△ : Ripeti"
+MUSIC_PLAYER_BUTTON_CYCLE_PLAY = "△ : Loop"
+
+MUSIC_PLAYER_SONG_NOFOUND = "Il file musicale MP3 non è stato trovato ...\n\nSi prega di inserire i file musicali MP3 nella cartella 'ux0:/data/music/' ."
+
+
 ----------------Text Editor---------------------*
 TEXTEDITOR_BUTTON_INSERT_LINE = "□ : Cancellare linea"
 TEXTEDITOR_BUTTON_DELETE_LINE = "△ : Aggiungere linea"
 TEXTEDITOR_BUTTON_POSITIVE = "○ : Modificare linea"
 TEXTEDITOR_BUTTON_LR = "L/R : Pagina su/giu"
 TEXTEDITOR_BUTTON_BUTTON_QUIT = "X : Esci"
-
 TEXTEDITOR_PLEASE_INPUT = "Inserire input."
-
 TEXTEDITOR_BUTTON_SAVE = "○ : Salva"
 TEXTEDITOR_BUTTON_UNSAVE = "△ : Non salvare"
-
 TEXTEDITOR_FILE_TOO_BIG = "Troppe righe. Solo dalla 1 alla 9999 linea saranno visualizzate."
 TEXTEDITOR_QUIT_SAVE_READY = "Stai uscendo dall'editor di testo.\n\nVuoi salvare prima di uscire?"
 TEXTEDITOR_SAVING = "Salvataggio in corso. Attendere Prego..."
