@@ -34,6 +34,10 @@ function explorer_get_filelist(filePath)
 	elseif explorerInfo.focus > listCounts then
 	 explorerInfo.focus = listCounts
 	end
+	if #explorerInfo.list > explorerShowCount and explorerInfo.top > #explorerInfo.list - (explorerShowCount - 1) then
+	 explorerInfo.top = #explorerInfo.list - (explorerShowCount - 1)
+	end
+
 	if listCounts > explorerShowCount then
   explorer_scrollbarOne_h = explorer_scrollbarBK_h/listCounts
   explorer_scrollbar_h = explorer_scrollbarOne_h*explorerShowCount
@@ -290,14 +294,14 @@ function explore_delete_files()
  buttons.homepopup(0)
  show_waiting_dialog(WAIT_EXECUTING)
  
- COMPLETE_COUNTS = 0
+ local completeCounts = 0
  local tmpPos = explorerInfo.focus
  local tmpTop = explorerInfo.top
  for i = 1, #explorerInfo.list do
   if i == explorerInfo.focus or (explorerInfo.list[explorerInfo.focus].mark and explorerInfo.list[i].mark) then
    files.delete(explorerInfo.list[i].path)
    if not files.exists(explorerInfo.list[i].path) then
-    COMPLETE_COUNTS += 1
+    completeCounts += 1
     if explorerInfo.focus > i then
      tmpPos -= 1
     end
@@ -308,14 +312,14 @@ function explore_delete_files()
   end --if i == focus or
  end --for i = 1, #explorerInfo.list
 
- if COMPLETE_COUNTS > 0 then
+ if completeCounts > 0 then
   explorerInfo.focus = tmpPos
   explorerInfo.top = tmpTop
   explorer_get_filelist(explorerInfo.rootPath)
  end
  
  buttons.homepopup(1)
- show_sample_dialog(TIPS, string.format(EXPLORE_DELETE_COMPLETE, COMPLETE_COUNTS), BUTTON_BACK)
+ show_sample_dialog(TIPS, string.format(EXPLORE_DELETE_COMPLETE, completeCounts), BUTTON_BACK)
 
 end
 
@@ -416,7 +420,7 @@ function explore_create_file()
  if newName and newName ~= "" then
   local pathToNewName = explorerInfo.rootPath..newName
   if not files.exists(pathToNewName) then
-   if create_file(pathToNewName) then
+   if files_create(pathToNewName) then
     --刷新列表
     explorer_get_filelist(explorerInfo.rootPath)
     --标记复制的文件，并重定义光标
@@ -483,10 +487,11 @@ function explore_install_apps(mode)
  show_waiting_dialog(WAIT_EXECUTING)
  
  local uxDev = "ux0:"
- --如果没有找到ux0盘符，则返回
+ local srcDev = explorerDevInfo.list[explorerDevInfo.focus]
+  --如果没有找到ux0盘符，则返回
  if not files.exists(uxDev) then
   buttons.homepopup(1)
-  show_sample_dialog(TIPS, EXPLORE_INSTALL_APP_NO_UX_DISK, BUTTON_BACK)
+  show_sample_dialog(TIPS, EXPLORE_INSTALL_APP_NO_UX_DEV, BUTTON_BACK)
   return
  end
 
@@ -495,165 +500,43 @@ function explore_install_apps(mode)
  if srcDev ~= uxDev or SELECT_COUNTS > 1 then
   INSTALL_APP_NOT_SCAN = true
  end
- INSTALL_GAME_ID = nil
- COMPLETE_COUNTS = 0
+ local completeCounts = 0
 
- local srcDev = explorerDevInfo.list[explorerDevInfo.focus]
- 
  for i = 1, #explorerInfo.list do
   
-  installResult = false
-  
-  if i == explorerInfo.focus or (explorerInfo.list[explorerInfo.focus].mark and explorerInfo.list[i].mark) then
-   
-   local pathToSrcInstallFile = explorerInfo.list[i].path
-   local installFileName = explorerInfo.list[i].name
-   
+  if i == explorerInfo.focus or (explorerInfo.list[explorerInfo.focus].mark and explorerInfo.list[i].mark) then 
    if explorerInfo.list[i].isDir then
-    
-    --如果安装包不在ux0盘符，检测剩余空间是否足够
-    if srcDev ~= uxDev then
-     local needSpace = files.size(pathToSrcInstallFile)
-     local freespaceBl = check_freespace(uxDev, needSpace)
-     if not freespaceBl then
-      buttons.homepopup(1)
-      local state = show_sample_dialog(TIPS, PSV_MANAGER_FREESPACE_NOTENOUGH, nil, BUTTON_POSITIVE)
-      if state == 1 then
-       explorer_get_filelist(explorerInfo.rootPath)
-       show_sample_dialog(TIPS, string.format(EXPLORE_INSTALL_APP_COMPLETE, COMPLETE_COUNTS), BUTTON_BACK)
-      end
-      return
-     end
+    local pathToInstallFile = explorerInfo.list[i].path
+    local installResult = 0
+    if mode == 1 then
+     installResult = install_psv_app(pathToInstallFile)
+    elseif mode == 2 then
+     installResult = refresh_psv_app(pathToInstallFile)    
     end
-    
-    local pathToSrcInstallFileEboot = pathToSrcInstallFile.."/eboot.bin"
-    local pathToSrcInstallFileSfo = pathToSrcInstallFile.."/sce_sys/param.sfo"
-    --如果安装包合法
-    if files.exists(pathToSrcInstallFileEboot) and files.exists(pathToSrcInstallFileSfo) then
-     --获取要安装的游戏ID
-     local gameInfo = game.info(pathToSrcInstallFileSfo)
-     --如果sfo合法
-     if gameInfo then
-      --获取要安装的游戏ID
-      INSTALL_GAME_ID = gameInfo.TITLE_ID
-     end
-     --如果获取到的游戏ID不为空，且不是正在运行的本软件
-     if INSTALL_GAME_ID and INSTALL_GAME_ID ~= os.titleid() then      
-      
-      --local gameExistBl = game.exists(INSTALL_GAME_ID)
- 
-      --创建源盘符的临时目录和备份目录
-      local pathToSrcTmp = srcDev.."/temp/install_app_tmp"
-      local pathToSrcTmpBak = pathToSrcTmp.."/backup"
-      files.delete(pathToSrcTmp)
-      files.mkdir(pathToSrcTmp)
-      files.mkdir(pathToSrcTmpBak)
-
-      --创建ux0盘符的临时目录和备份目录
-      local pathToUxTmp = uxDev.."/temp/install_app_tmp"
-      local pathToUxTmpBak = pathToUxTmp.."/backup"
-      if pathToSrcTmp ~= pathToUxTmp then
-       files.delete(pathToUxTmp)
-       files.mkdir(pathToUxTmp)
-       files.mkdir(pathToUxTmpBak)
-      end
-
-      --移动源盘符安装包到同盘符的临时目录
-      files.move(pathToSrcInstallFile, pathToSrcTmp)
-      local pathToSrcTmpInstallFile = pathToSrcTmp.."/"..installFileName
-      --重命名安装包名为游戏ID名
-      files.rename(pathToSrcTmpInstallFile, INSTALL_GAME_ID)
-      local pathToSrcTmpGame = pathToSrcTmp.."/"..INSTALL_GAME_ID
-      
-      --移动ux0盘符app目录下的同名游戏到备份目录
-      local pathToUxApp = uxDev.."/app"
-      local pathToUxAppGame = pathToUxApp.."/"..INSTALL_GAME_ID
-      if files.exists(pathToUxAppGame) then
-       files.move(pathToUxAppGame, pathToUxTmpBak)
-      end
-      local pathToUxTmpBakAppGame = pathToUxTmpBak.."/"..INSTALL_GAME_ID
-      
-      --源临时目录下sce_sys、sce_pfs、eboot、package路径
-      local pathToSrcTmpGameSys = pathToSrcTmpGame.."/sce_sys"
-      local pathToSrcTmpGamePfs = pathToSrcTmpGame.."/sce_pfs"
-      local pathToSrcTmpGameEboot = pathToSrcTmpGame.."/eboot.bin"
-      local pathToSrcTmpGamePackage = pathToSrcTmpGameSys.."/package"
-      --移动源临时目录下package文件夹到源备份目录(安装普通游戏)
-      if mode == 1 then
-       files.move(pathToSrcTmpGamePackage, pathToSrcTmpBak)
-      end
-      local pathToSrcTmpBakGamePackage = pathToSrcTmpBak.."/package"
-      
-      --如果源安装包不在ux0，则复制游戏迷你安装包到ux0临时目录
-      local pathToUxTmpGame = pathToUxTmp.."/"..INSTALL_GAME_ID
-      if srcDev ~= uxDev then
-       --创建ux0盘符临时目录下游戏id文件夹
-       files.mkdir(pathToUxTmpGame)
-       --复制游戏小包到ux0临时安装目录
-       files.copy(pathToSrcTmpGameSys, pathToUxTmpGame)
-       files.copy(pathToSrcTmpGamePfs, pathToUxTmpGame)
-       files.copy(pathToSrcTmpGameEboot, pathToUxTmpGame)
-      end --if srcDev ~= uxDev
-      
-      --安装ux0盘符临时目录的安装包
-      if mode == 1 then
-       installResult = game.installdir(pathToUxTmpGame)
-      elseif mode == 2 then
-       installResult = game.refresh(pathToUxTmpGame)
-      end
-      
-      --如果安装游戏成功
-      local pathToUxTmpGameSys = pathToUxTmpGame.."/sce_sys"
-      local pathToUxTmpGameSfo = pathToUxTmpGameSys.."/param.sfo"
-      local pathToUxTmpGamePackage = pathToUxTmpGameSys.."/package"
-      --如果安装游戏成功
-      if installResult == 1 then 
-       --如果源盘符不同于ux0盘符，复制完整包到ux0盘符
-       if srcDev ~= uxDev then
-        local fileList = files.list(pathToSrcTmpGame)
-        if fileList then
-         for i = 1, #fileList do
-          local fileName = fileList[i].name
-          if fileName ~= "sce_sys" and fileName ~= "sce_pfs" and fileName ~= "eboot.bin" then
-           files.copy(fileList[i].path, pathToUxAppGame)
-          end
-         end
-        end
-       end
-       files.delete(pathToUxTmpBakAppGame)
-       COMPLETE_COUNTS += 1
-      else
-       if mode == 1 then
-        files.delete(pathToUxTmpGamePackage)
-        files.move(pathToSrcTmpBakGamePackage, pathToSrcTmpGameSys)
-       end
-      end --if installResult == 1
-      
-      --还原源盘符安装包文件
-      files.rename(pathToSrcTmpGame, installFileName)
-      files.move(pathToSrcTmpInstallFile, files.nofile(pathToSrcInstallFile))
-      --还原ux0盘符app下同名游戏目录
-      files.move(pathToUxTmpBakAppGame, pathToUxApp)
-      
-      --删除临时目录
-      files.delete(pathToSrcTmp)
-      files.delete(pathToUxTmp)
-
-     end --if INSTALL_GAME_ID and
-    end --if files.exists(pathToSrcInstallFileEboot)
+    if installResult == 1 then
+     completeCounts += 1
+    elseif installResult == -10 then
+     show_sample_dialog(TIPS, EXPLORE_FREESPACE_NOTENOUGH, nil, BUTTON_POSITIVE)
+     break
+    end
    end --if explorerInfo.list[i].isDir
   end --if i == explorerInfo.focus and
    
  end --for i = 1, #explorerInfo.list do 
  
  explorer_get_filelist(explorerInfo.rootPath)
+ if completeCounts > 0 then
+  if SECOND_INTO_PSVMANAGER then
+   psvmanagerInfo.list = nil
+  end
+ end
  
  INSTALL_APP_NOT_SCAN = false
  buttons.homepopup(1)
  if INSTALL_CANCEL then
   show_close_dialog()
  else
-  show_sample_dialog(TIPS, string.format(EXPLORE_INSTALL_APP_COMPLETE, COMPLETE_COUNTS), BUTTON_BACK)
+  show_sample_dialog(TIPS, string.format(EXPLORE_INSTALL_APP_COMPLETE, completeCounts), BUTTON_BACK)
  end
  
 end
@@ -664,7 +547,7 @@ function explore_export_files()
  buttons.homepopup(0)
  show_waiting_dialog(WAIT_EXECUTING)
  
- COMPLETE_COUNTS = 0
+ local completeCounts = 0
  for i = 1, #explorerInfo.list do
   
   if i == explorerInfo.focus or (explorerInfo.list[explorerInfo.focus].mark and explorerInfo.list[i].mark) then
@@ -672,9 +555,9 @@ function explore_export_files()
     local fileExt = explorerInfo.list[i].ext
     if fileExt == "png" or fileExt == "jpg" or fileExt == "bmp" or fileExt == "gif" or fileExt == "mp3" or fileExt == "mp4" then
      show_waiting_dialog(explorerInfo.list[i].name)
-     local result = files.export(explorerInfo.list[i].path)
-     if result == 1 then
-      COMPLETE_COUNTS += 1
+     local exportResult = files.export(explorerInfo.list[i].path)
+     if exportResult == 1 then
+      completeCounts += 1
      end
     end
    end
@@ -682,12 +565,10 @@ function explore_export_files()
   
  end
  
- if COMPLETE_COUNTS > 0 then
-  explorer_get_filelist(explorerInfo.rootPath)
- end
+ explorer_get_filelist(explorerInfo.rootPath)
  
  buttons.homepopup(1)
- show_sample_dialog(TIPS, string.format(EXPLORE_EXPORT_MULTIMEDIA_COMPLETE, COMPLETE_COUNTS), BUTTON_BACK)
+ show_sample_dialog(TIPS, string.format(EXPLORE_EXPORT_MULTIMEDIA_COMPLETE, completeCounts), BUTTON_BACK)
 
 end
 

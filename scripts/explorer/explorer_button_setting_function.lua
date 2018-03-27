@@ -108,6 +108,7 @@ function explorer_button_setting()
      end
     end
     if #explorerInfo.list > 0 then
+     local filePath = explorerInfo.list[explorerInfo.focus].path
      if explorerInfo.marksCounts == #explorerInfo.list then
       explorerMenuInfo.list[1] = EXPLORE_UNMARKS_ALL
      end
@@ -119,7 +120,9 @@ function explorer_button_setting()
       explorerMenuInfo.usable[6] = true
       explorerMenuInfo.usable[7] = true
       if explorerInfo.list[explorerInfo.focus].isDir then
-       explorerMenuInfo.usable[10] = true
+       if files.exists(filePath.."/eboot.bin") and files.exists(filePath.."/sce_sys/param.sfo") then
+        explorerMenuInfo.usable[10] = true
+       end
       else
        local fileExt = explorerInfo.list[explorerInfo.focus].ext
        if fileExt == "png" or fileExt == "jpg" or fileExt == "bmp" or fileExt == "gif" or fileExt == "mp3" or fileExt == "mp4" then
@@ -128,7 +131,6 @@ function explorer_button_setting()
       end
      end
      explorerMenuInfo.focus = 1
-
     end
    end
   end
@@ -180,12 +182,12 @@ function explorer_button_setting()
    explore_mark_dir()
 
   elseif state == 10 then --安装游戏文件夹
-   explorerInstallPathSelectMenuInfo.focus = 1
+   explorerInstallFunctionSelectMenuInfo.focus = 1
    SELECT_COUNTS = 1 --要操作的文件数量
    if explorerInfo.list[explorerInfo.focus].mark then
     SELECT_COUNTS = explorerInfo.marksCounts
    end
-   local state = show_list_dialog(PLEASE_SELECT, explorerInstallPathSelectMenuInfo, BUTTON_CANCEL, BUTTON_POSITIVE)
+   local state = show_list_dialog(PLEASE_SELECT, explorerInstallFunctionSelectMenuInfo, BUTTON_CANCEL, BUTTON_POSITIVE)
    if state == 1 then --安装已解密的游戏
     local state = show_sample_dialog(TIPS, string.format(EXPLORE_INSTALL_APP_READY, SELECT_COUNTS), BUTTON_CANCEL, BUTTON_POSITIVE)
     if state == 1 then 
@@ -275,7 +277,7 @@ function explorer_button_setting()
       local installBl = game.install(filePath)
       if installBl == 1 then
        COMPLETE_COUNTS += 1
-       if secondIntoPsvmanager then
+       if SECOND_INTO_PSVMANAGER then
         psvmanagerInfo.list = nil
        end
       end
@@ -312,7 +314,7 @@ function explorer_button_setting()
      EDIT_FILE_PATH = filePath
      TEXTEDITOR_READ_ONLY = false
      dofile("scripts/texteditor/texteditor.lua")
-     
+    
     else
      local state = show_sample_dialog(TIPS, EXPLORE_OPEN_UKNOW_FILE_READY, BUTTON_CANCEL, BUTTON_POSITIVE)
      if state == 1 then

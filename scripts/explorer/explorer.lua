@@ -92,20 +92,10 @@ if not secondIntoExplorer then
   usable = {},
  }
 
- explorerInstallPathSelectMenuInfo = {
+ explorerInstallFunctionSelectMenuInfo = {
   list = {
-   EXPLORE_INSTALL_APP_SAMPLE,
-   EXPLORE_INSTALL_APP_NONPDRM,
-  },
-  focus = 1,
-  top = 1,
- }
- 
- explorerInstallMenuInfo = {
-  list = {
-   EXPLORE_INSTALL_APP_TO_UX,
-   EXPLORE_INSTALL_APP_TO_UMA,
-   EXPLORE_INSTALL_APP_TO_UR,
+   EXPLORE_INSTALL_APP_INSTALL,
+   EXPLORE_INSTALL_APP_REFRESH,
   },
   focus = 1,
   top = 1,

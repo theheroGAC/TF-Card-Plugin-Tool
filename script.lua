@@ -1,16 +1,17 @@
---------------------script-------------------------------------------------------------------
+--------------------main-------------------------------------------------------------------
 
 
 -------------------加载脚本---------------------- 
 dofile("scripts/strings.lua")
 dofile("scripts/colors.lua")
 dofile("scripts/sample_functions.lua")
+dofile("scripts/vita_functions.lua")
 dofile("scripts/dialog_functions.lua")
 dofile("scripts/callbacks.lua")
 
-dofile("scripts/script/script_functions.lua")
-dofile("scripts/script/script_graphics_function.lua")
-dofile("scripts/script/script_button_setting_function.lua")
+dofile("scripts/main/main_functions.lua")
+dofile("scripts/main/main_graphics_function.lua")
+dofile("scripts/main/main_button_setting_function.lua")
 
 dofile("scripts/musicplayer/musicplayer_functions.lua")
 dofile("scripts/musicplayer/musicplayer_autoplaynextmusic_function.lua")
@@ -25,10 +26,10 @@ end
 if back then image.resize(back, 960, 544) end --重定义图片大小充满屏幕
 --mCdirPath = files.cdir() --记录软件本身的默认工作目录
 
-VITA_SWVERSION = tonumber(os.swversion())
+--VITA_SWVERSION = tonumber(os.swversion())
 
 --选项
-scriptInfo = {
+mainInfo = {
  list = {
   MOUNT_TF_UMA,
   MOUNT_TF_UX,
@@ -43,18 +44,9 @@ scriptInfo = {
 }
 
 --按键
-scriptButtonTextList = {
+mainButtonTextList = {
  MAIN_BUTTON_SELECT,
  MAIN_BUTTON_POSITIVE,
-}
-
-installModeSelectMenuInfo = {
- list = {
- INSTALL_TF_USB_MODE_SELECT_OLD,
- INSTALL_TF_USB_MODE_SELECT_NEW,
- },
- top = 1,
- focus = 1,
 }
 
 -------------------continue----------------------------
@@ -77,11 +69,11 @@ if files.exists(pathToBgmMusic) then
 end --自动播放音乐代码结束
 
 ---------------------while---------------------------------------
-scriptRun = true
-while scriptRun do
+mainRun = true
+while mainRun do
 
- script_graphics() --构画界面
- script_button_setting() --设置按键
+ main_graphics() --构画界面
+ main_button_setting() --设置按键
  musicplayer_autoplaynextmusic() --自动播放下一首音乐
 
 end

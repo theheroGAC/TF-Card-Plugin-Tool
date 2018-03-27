@@ -14,7 +14,7 @@ function musicplayer_get_music_list(path)
 			if t.ext then
 			 if t.ext == "mp3" or t.ext == "ogg" or t.ext == "wav" then
 			  --t.size = files.sizeformat(t.size)
-			  t.nameNoExt = getFileNameNoExt(t.name)
+			  t.nameNoExt = files_noext(t.name)
 			  table.insert(musicplayerInfo.list, t)
 			  j += 1
 			  if not getPlayingSongInt and playingSongName and playingSongName == t.nameNoExt then

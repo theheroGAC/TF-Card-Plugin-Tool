@@ -173,7 +173,7 @@ function get_sample_dialog_info(message)
  if type(message) == "table" then
   messageInfo.list = message
  else
-  messageInfo.list = stringSplit(message, "\n")
+  messageInfo.list = string_split(message, "\n")
  end
  
  dialogListLineHeight = screen.textheight(1)

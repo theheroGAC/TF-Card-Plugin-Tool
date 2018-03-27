@@ -58,7 +58,7 @@ end
 
 ----------------continue------------------------------------------------------------------------
 local musicRootPath = "ux0:data/music/"
-if check_file(musicRootPath) ~= 2 then
+if files_exists(musicRootPath) ~= 2 then
  mainLoadWaiting(MUSIC_PLAYER, musicplayerButtonTextList)
  files.delete(musicRootPath)
  files.mkdir(musicRootPath)
