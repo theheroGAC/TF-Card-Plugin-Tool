@@ -144,7 +144,7 @@ EXPLORE_EXPORT_MULTIMEDIA_READY = "Sei sicuro di voler esportare questo%i file m
 EXPLORE_EXPORT_MULTIMEDIA_COMPLETE = "Totale file multimediali esportati"
 
 ----------------音乐播放器----------------------------------------
-MUSIC_PLAYER_PLAYLIST = "プレイリスト"
+MUSIC_PLAYER_PLAYLIST = "Playlist"
 
 MUSIC_PLAYER_BUTTON_PLAY = "□ : PLAY"
 MUSIC_PLAYER_BUTTON_PARSE = "□ : Pausa"
@@ -172,12 +172,4 @@ TEXTEDITOR_FILE_TOO_BIG = "Troppe righe. Solo dalla 1 alla 9999 linea saranno vi
 TEXTEDITOR_QUIT_SAVE_READY = "Stai uscendo dall'editor di testo.\n\nVuoi salvare prima di uscire?"
 TEXTEDITOR_SAVING = "Salvataggio in corso. Attendere Prego..."
 TEXTEDITOR_SAVE_COMPLETE = "Il salvataggio è stato completato."
-
-
-
-
-
-
-
-
 
