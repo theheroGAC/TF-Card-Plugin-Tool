@@ -1,4 +1,7 @@
-﻿v2.2
+﻿v2.21
+fix uma0: remounting after suspend
+--2018.07.05
+v2.2
 Update to support FW 3.68
 v2.1
 1 修复一个从非ux0安装文件夹游戏崩溃的bug。
