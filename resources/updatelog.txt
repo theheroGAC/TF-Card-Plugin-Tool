@@ -1,4 +1,7 @@
-﻿v2.21
+﻿v2.22
+fix problem on uma0:
+--2018.07.09
+v2.21
 fix uma0: remounting after suspend
 --2018.07.05
 v2.2
