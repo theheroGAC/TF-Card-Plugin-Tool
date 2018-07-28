@@ -2,8 +2,8 @@
 
 ------------------关于--------------------------*
 APP_NAME = "TF卡插件工具 [TF card plug-in tool]"
-APP_VERSION = "v2.22"
-APP_BUILD_DATE = "2018.07.09"
+APP_VERSION = "v2.23"
+APP_BUILD_DATE = "2018.07.28"
 APP_NAME_VERSION = APP_NAME.." "..APP_VERSION
 
 ------------------弹窗--------------------------*
