@@ -9,3 +9,7 @@ The new version incorporates a file manager, FTP connection, adds compatibility 
 - Yifan Lu
 - Kouchan for the English translation
 - Info Thief
+- CelesteBlue for the rewriting, fixes, tests (I spent about 40 hours on this project)
+- gamesd by motoharu / xyz
+- usbmc by yifanlu / TheFloW
+- VitaShell kernel plugin by TheFloW
